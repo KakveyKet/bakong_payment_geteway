@@ -6,7 +6,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const BAKONG_TOKEN = process.env.bakong_token_key;
+const BAKONG_TOKEN =
+  process.env.bakong_token_key ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiMDdkZDY4N2QzZGJmNDcwMSJ9LCJpYXQiOjE3NTg4NTUzNTQsImV4cCI6MTc2NjYzMTM1NH0.2Kok3ZF_jP4BuOBBAVm5fESY8RIoa7Pp7uxUNkJiTBI";
 
 app.post("/api/check-transaction", async (req, res) => {
   const { md5 } = req.body;
