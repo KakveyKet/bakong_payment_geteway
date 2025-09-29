@@ -31,5 +31,39 @@ app.post("/api/check-transaction", async (req, res) => {
     res.status(500).json({ error: err.message, data: err.response?.data });
   }
 });
+// bakong deep link generator endpoint
+app.post("/api/generate-deep-link", async (req, res) => {
+  const { qr, sourceInfo } = req.body;
+
+  if (!qr) return res.status(400).json({ error: "QR string is required" });
+
+  try {
+    const response = await axios.post(
+      "https://api-bakong.nbc.gov.kh/v1/generate_deeplink_by_qr",
+      {
+        qr,
+        sourceInfo: sourceInfo || {
+          appIconUrl: "https://bakong.nbc.gov.kh/images/logo.svg",
+          appName: "Bakong App",
+          appDeepLinkCallback: "https://bakong.nbc.gov.kh/",
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${BAKONG_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (err) {
+    console.error(
+      "Error generating deeplink:",
+      err.response?.data || err.message
+    );
+    res.status(500).json({ error: err.message, data: err.response?.data });
+  }
+});
 
 app.listen(3001, () => console.log("Server running on port 3001"));
